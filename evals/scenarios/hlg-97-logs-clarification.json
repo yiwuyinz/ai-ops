@@ -1,0 +1,8 @@
+{
+  "id": "hlg-97-logs-clarification",
+  "name": "Missing context — ask for clarification (QA)",
+  "description": "原样移植 HolmesGPT 97_logs_clarification_needed。用户请求'获取最近 30 分钟日志'但未指定服务/pod，agent 必须要求澄清，不得随意猜测查询目标。注意：此为校准型断言，首次跑基线后可能需微调措辞。",
+  "userPrompt": "Get me logs for the last 30 minutes",
+  "expectedVerdict": "any",
+  "mustContain": ["which service"]
+}

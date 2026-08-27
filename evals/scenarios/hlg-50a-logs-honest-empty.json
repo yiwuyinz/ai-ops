@@ -1,0 +1,9 @@
+{
+  "id": "hlg-50a-logs-honest-empty",
+  "name": "Loki: no logs must be reported honestly (logs)",
+  "description": "复刻 HolmesGPT 50a 系列的精神（不存在的 pod）：ghost-pod 没有任何日志，agent 必须真的调用 search_logs 查询，并如实报告无匹配日志（防幻觉——不允许编造日志内容）。前置：无需注入（故意不注入）。",
+  "userPrompt": "What were the errors in pod ghost-pod in the last hour?",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["No log lines matched"]
+}

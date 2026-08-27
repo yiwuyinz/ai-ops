@@ -1,0 +1,75 @@
+# AI Ops Agent - local dev observability stack
+# Usage: docker compose up -d
+#   Prometheus  : http://localhost:9090
+#   AlertManager: http://localhost:9093
+#   Loki        : http://localhost:3100
+#   Grafana     : http://localhost:3000  (admin/admin)
+#   PostgreSQL  : localhost:5432 (aops/aops)
+#   Redis       : localhost:6379
+#
+# NOTE: AlertManager is configured to POST firing alerts to
+# http://host.docker.internal:8080/api/alerts (the Java agent running on the host).
+services:
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: aops-prometheus
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prometheus/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: aops-alertmanager
+    volumes:
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "9093:9093"
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+
+  loki:
+    image: grafana/loki:3.1.1
+    container_name: aops-loki
+    volumes:
+      - ./config/loki/loki-config.yaml:/etc/loki/local-config.yaml:ro
+    ports:
+      - "3100:3100"
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: aops-postgres
+    environment:
+      POSTGRES_USER: aops
+      POSTGRES_PASSWORD: aops
+      POSTGRES_DB: aops
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2
+    container_name: aops-redis
+    ports:
+      - "6379:6379"
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: aops-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+
+volumes:
+  pgdata:

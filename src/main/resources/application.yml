@@ -1,0 +1,86 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ai-ops-agent
+  datasource:
+    url: jdbc:postgresql://${AOPS_DB_HOST:localhost}:5432/${AOPS_DB_NAME:aops}
+    username: ${AOPS_DB_USER:aops}
+    password: ${AOPS_DB_PASSWORD:aops}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  data:
+    redis:
+      host: ${AOPS_REDIS_HOST:localhost}
+      port: 6379
+
+aops:
+  agent:
+    main-model: ${DEEPSEEK_MODEL:deepseek-chat}
+    base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
+    # NEVER commit a real key here. Use the DEEPSEEK_API_KEY env var, or an
+    # ignored application-local.yml (see .gitignore) with
+    # `aops.agent.api-key: sk-...` and run with --spring.profiles.active=local.
+    api-key: ${DEEPSEEK_API_KEY:}
+    fast-model: ${AOPS_FAST_MODEL:deepseek-chat}
+    temperature: 0.2
+    timeout-seconds: 180
+    max-steps: 8
+    max-tool-output-chars: 6000
+    # Deterministic confidence gate: CONFIRMED / likely-FP verdicts below this
+    # confidence are escalated to a human instead of auto-closed.
+    min-confidence: ${AOPS_MIN_CONFIDENCE:0.6}
+    # Transient LLM call retries (rate limits, timeouts) before giving up.
+    llm-retries: ${AOPS_LLM_RETRIES:2}
+    # Investigation mode: single (one agent, all tools) or supervisor
+    # (3 specialist agents in parallel + synthesis — Phase 3).
+    mode: ${AOPS_AGENT_MODE:supervisor}
+    # Shadow mode: with the agent disabled, alerts are only recorded/deduped and
+    # a placeholder report is produced — safe to run before any LLM key is set.
+    enabled: true
+  tools:
+    loki:
+      base-url: ${LOKI_URL:http://localhost:3100}
+      default-limit: 500
+    prometheus:
+      base-url: ${PROMETHEUS_URL:http://localhost:9090}
+    alertmanager:
+      base-url: ${ALERTMANAGER_URL:http://localhost:9093}
+  topology:
+    file: ${AOPS_TOPOLOGY_FILE:config/topology.json}
+  runbook:
+    directory: ${AOPS_RUNBOOK_DIR:config/runbooks}
+  kb:
+    directory: ${AOPS_KB_DIR:config/kb}
+    # RAG mode: keyword + pgvector semantic hybrid search.
+    # Any OpenAI-compatible embeddings API works (e.g. SiliconFlow BAAI/bge-m3,
+    # Alibaba dashscope text-embedding-v3). DeepSeek has no embedding API.
+    embedding-enabled: ${AOPS_KB_EMBEDDING_ENABLED:false}
+    embedding-base-url: ${AOPS_KB_EMBEDDING_BASE_URL:https://api.siliconflow.cn/v1}
+    embedding-api-key: ${AOPS_KB_EMBEDDING_API_KEY:}
+    embedding-model: ${AOPS_KB_EMBEDDING_MODEL:BAAI/bge-m3}
+    embedding-dimension: ${AOPS_KB_EMBEDDING_DIMENSION:1024}
+    chunk-size: ${AOPS_KB_CHUNK_SIZE:700}
+    chunk-overlap: ${AOPS_KB_CHUNK_OVERLAP:100}
+    # hybrid score = vectorWeight * cosine + (1 - vectorWeight) * keywordScore
+    vector-weight: ${AOPS_KB_VECTOR_WEIGHT:0.6}
+    reindex-on-startup: ${AOPS_KB_REINDEX_ON_STARTUP:true}
+  dedup:
+    mode: ${AOPS_DEDUP_MODE:memory}
+    window-minutes: 60
+  notifier:
+    type: ${AOPS_NOTIFIER_TYPE:console}
+    slack-webhook-url: ${SLACK_WEBHOOK_URL:}
+  async:
+    core-pool-size: 2
+    max-pool-size: 4
+    queue-capacity: 100
+  eval:
+    scenarios-dir: ${AOPS_EVAL_SCENARIOS_DIR:evals/scenarios}
+
+logging:
+  level:
+    com.aops.agent: INFO

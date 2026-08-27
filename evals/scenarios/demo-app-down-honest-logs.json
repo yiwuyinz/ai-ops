@@ -1,0 +1,15 @@
+{
+  "id": "demo-app-down-honest-logs",
+  "name": "Empty logs must be reported honestly",
+  "description": "Anti-hallucination check: for a service that emits no logs, the agent must actually query Loki and honestly report that no log lines matched — never fabricate log findings.",
+  "alert": {
+    "alertName": "DemoAppDown",
+    "status": "firing",
+    "labels": { "service": "demo-app" },
+    "annotations": { "summary": "demo app is down" },
+    "startsAt": "2025-01-01T10:00:00Z"
+  },
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["No log lines matched"]
+}

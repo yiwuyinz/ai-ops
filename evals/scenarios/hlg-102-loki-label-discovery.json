@@ -1,0 +1,9 @@
+{
+  "id": "hlg-102-loki-label-discovery",
+  "name": "Loki: label discovery with non-standard labels (logs)",
+  "description": "复刻 HolmesGPT 102_loki_label_discovery 的核心：inventory-service 的日志用非标准 label pod_name 注入，agent 必须自行发现实际标签（我们的 search_logs 透传 LogQL，无默认标签假设）并取回日志内容。前置：先运行注入脚本。",
+  "userPrompt": "Fetch me the logs for the inventory-service pod in namespace app-102",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["ITEM-1234"]
+}

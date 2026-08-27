@@ -1,0 +1,8 @@
+{
+  "id": "hlg-03-port-forward-command",
+  "name": "kubectl port-forward command (QA)",
+  "description": "改编自 HolmesGPT 03_what_is_the_command_to_port_forward（去掉 k8s 依赖的纯知识问答）。验证 agent 能给出正确的 kubectl port-forward 命令格式。",
+  "userPrompt": "What is the kubectl command to port forward to a pod?",
+  "expectedVerdict": "any",
+  "mustContain": ["kubectl port-forward"]
+}

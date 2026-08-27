@@ -1,0 +1,16 @@
+{
+  "id": "demo-app-down",
+  "name": "Demo app is down — confirm with evidence",
+  "description": "DemoAppDown alert for a genuinely unreachable service. The agent must confirm via metrics (up=0), consult the runbook, and report a real root cause with decent confidence.",
+  "alert": {
+    "alertName": "DemoAppDown",
+    "status": "firing",
+    "labels": { "service": "demo-app", "severity": "warning" },
+    "annotations": { "summary": "demo app is down" },
+    "startsAt": "2025-01-01T10:00:00Z"
+  },
+  "expectedVerdict": "CONFIRMED",
+  "minConfidence": 0.5,
+  "requiredTools": ["query_metric", "fetch_runbook"],
+  "mustContain": ["up{job=\"demo-app\"}"]
+}

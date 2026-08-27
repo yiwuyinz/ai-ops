@@ -1,0 +1,9 @@
+{
+  "id": "hlg-103-logs-transparency-limit",
+  "name": "Loki: truncation transparency with many logs (logs)",
+  "description": "复刻 HolmesGPT 103_logs_transparency_default_limit（简化）：deep-diver 已注入 150+ 条混合级别日志，agent 必须展示实际日志内容（而不是空洞描述）。截断透明度（'showing last 100' 类措辞）为校准项，基线后视情况加强断言。前置：先运行注入脚本。",
+  "userPrompt": "Show me logs from the pod deep-diver",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["deep-diver"]
+}

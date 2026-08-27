@@ -1,0 +1,43 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+
+common:
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2024-01-01
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+limits_config:
+  allow_structured_metadata: false
+  # Accept log pushes up to 7 days old (default is only 1h) — needed by the
+  # eval log-injection script (hlg-99 spreads logs across 24 hours).
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+
+# Fast flushing: with the default chunk_idle_period (30m) freshly pushed logs
+# stay in the ingester head and are NOT visible to queries (querier does not
+# reliably reach the ingester in single-binary mode) — the eval loop would see
+# stale/empty results. 15s idle + 5s check flushes each stream ~20s after push.
+# (Any TSDB index sync latency beyond this is handled by the injection script's
+# self-verify: it waits and confirms BOTH {job="eval"} and {pod="payment-api"}
+# selectors return data before declaring VERIFY OK.)
+ingester:
+  chunk_idle_period: 15s
+  flush_check_period: 5s

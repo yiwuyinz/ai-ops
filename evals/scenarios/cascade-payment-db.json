@@ -1,0 +1,15 @@
+{
+  "id": "cascade-payment-db",
+  "name": "Cascading failure: payment latency caused by downstream DB (supervisor mode)",
+  "description": "Phase 3 acceptance scenario: payment-api shows latency/timeout errors, and its logs implicate the downstream db-primary (slow queries + query timeouts). The agent must trace the dependency chain to db-primary and quote its log evidence. Requires aops.agent.mode=supervisor for the parallel-specialist path (also passable in single mode). Data injected by scripts/inject-loki-eval-logs.ps1.",
+  "alert": {
+    "alertName": "HighLatencyPaymentApi",
+    "status": "firing",
+    "labels": { "service": "payment-api", "severity": "warning" },
+    "annotations": { "summary": "payment api latency high" },
+    "startsAt": "2025-01-01T10:00:00Z"
+  },
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["db-primary"]
+}

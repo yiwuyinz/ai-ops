@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Build & run tests
+        run: ./mvnw -B package
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-ops-agent-jar
+          path: target/ai-ops-agent-*.jar
+          if-no-files-found: error

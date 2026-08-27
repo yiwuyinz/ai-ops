@@ -1,0 +1,9 @@
+{
+  "id": "hlg-23-dns-resolution-error",
+  "name": "Loki: DNS resolution error root cause (logs)",
+  "description": "复刻 HolmesGPT 23_app_error_in_current_logs（简化）：meme-deployment 的 DNS 解析失败日志已注入（'Failed to reach memcom'），agent 必须通过日志定位到 DNS 解析问题并引用主机名 memcom。前置：先运行注入脚本。",
+  "userPrompt": "Why is meme-deployment not responding to http requests?",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["memcom"]
+}

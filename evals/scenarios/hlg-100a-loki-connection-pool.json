@@ -1,0 +1,9 @@
+{
+  "id": "hlg-100a-loki-connection-pool",
+  "name": "Loki: database connection pool exhaustion (logs)",
+  "description": "复刻 HolmesGPT 100a_loki_historical_logs（简化：无 k8s，日志由 scripts/inject-loki-eval-logs.ps1 预先注入本机 Loki）。agent 必须真的用 search_logs 查日志，并从 ConnectionPoolExhausted 错误中定位根因。前置：先运行注入脚本。",
+  "userPrompt": "The payment-api pod had issues recently. What happened?",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["ConnectionPoolExhausted"]
+}

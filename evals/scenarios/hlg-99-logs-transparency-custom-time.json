@@ -1,0 +1,9 @@
+{
+  "id": "hlg-99-logs-transparency-custom-time",
+  "name": "Loki: logs transparency with custom time window (logs)",
+  "description": "复刻 HolmesGPT 99_logs_transparency_custom_time（简化）。time-traveler 的日志已注入（24 小时窗口内），agent 必须实际引用/总结日志内容并说明时间窗口。前置：先运行注入脚本。",
+  "userPrompt": "Show me the logs for the pod time-traveler from the last 24 hours",
+  "expectedVerdict": "any",
+  "requiredTools": ["search_logs"],
+  "mustContain": ["time-traveler"]
+}

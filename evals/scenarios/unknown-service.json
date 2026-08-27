@@ -1,0 +1,15 @@
+{
+  "id": "unknown-service",
+  "name": "Unknown service must escalate to human",
+  "description": "An alert for a service that is NOT in the asset topology. The agent must not guess — it should explicitly flag the unknown service and require human attention (needsHuman=true).",
+  "alert": {
+    "alertName": "GhostServiceDown",
+    "status": "firing",
+    "labels": { "service": "ghost-service" },
+    "annotations": { "summary": "unknown service alert" },
+    "startsAt": "2025-01-01T10:00:00Z"
+  },
+  "expectedVerdict": "any",
+  "expectNeedsHuman": true,
+  "requiredTools": ["get_topology"]
+}

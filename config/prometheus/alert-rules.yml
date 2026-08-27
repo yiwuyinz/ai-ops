@@ -1,0 +1,12 @@
+groups:
+  - name: demo
+    rules:
+      - alert: DemoAppDown
+        expr: up{job="demo-app"} == 0
+        for: 1m
+        labels:
+          severity: warning
+          service: demo-app
+        annotations:
+          summary: "Demo app is down"
+          description: "The demo-app target cannot be scraped by Prometheus."

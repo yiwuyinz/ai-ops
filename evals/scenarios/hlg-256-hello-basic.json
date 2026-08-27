@@ -1,0 +1,7 @@
+{
+  "id": "hlg-256-hello-basic",
+  "name": "Basic greeting — pipeline smoke (QA)",
+  "description": "原样移植 HolmesGPT 256_hello_token_limit 的冒烟语义：无任何断言（除管道必须完成），验证问答模式端到端可用。",
+  "userPrompt": "Hello, how are you?",
+  "expectedVerdict": "any"
+}

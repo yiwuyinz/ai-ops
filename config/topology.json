@@ -1,0 +1,15 @@
+{
+  "services": [
+    {
+      "name": "demo-app",
+      "namespace": "default",
+      "logSelector": "{job=\"demo-app\"}",
+      "logQueryHints": ["error", "exception", "panic", "fatal"],
+      "metricNamespaces": ["up", "demo_"],
+      "runbookRefs": ["demo-app-down"],
+      "owner": "sre@example.com",
+      "dependsOn": [],
+      "notes": "Demo service used to validate the alert pipeline. Replace with real services."
+    }
+  ]
+}
