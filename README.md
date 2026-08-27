@@ -1,6 +1,6 @@
 # AI Ops Agent（Java）
 
-一体化的排障 Agent：把 **日志 / 指标 / 告警 / 知识库 / Runbook / 故障定位** 绑在一起，
+一体化的排障 Agent： **日志 / 指标 / 告警 / 知识库 / Runbook / 故障定位** ，
 架构参考 [HolmesGPT](https://github.com/HolmesGPT/holmesgpt)（CNCF SRE Agent），技术栈为 Java。
 
 **核心机制**（与 HolmesGPT 一致的三条设计）：
@@ -213,14 +213,3 @@ ai-ops-agent/
     ├── web/         # 告警 Webhook / Case / Feedback / Info 接口
     └── config/      # 配置属性 + LLM 工厂
 ```
-
-## 路线图进度
-
-- ✅ Phase 0：工程骨架 + docker-compose dev 环境
-- ✅ Phase 1（MVP）：单 Agent 闭环（告警接入 → 调查 → 报告 → 反馈）
-- ⏳ Phase 2：上下文工程强化（输出摘要预算已内置）、Eval 评测集、置信度调优
-- ⏳ Phase 3：多 Agent（Supervisor + 专业 Agent）+ Temporal 编排
-- ⏳ Phase 4：误报引擎报表自动化、定时巡检（Operator 模式）
-- ⏳ Phase 5：认证授权、多租户、生产化部署（Helm）
-
-详见根目录 `java-ai-ops-agent-roadmap.md`。
