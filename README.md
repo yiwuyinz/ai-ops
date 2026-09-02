@@ -62,8 +62,6 @@ docker compose up -d
 - PostgreSQL: localhost:5432 (aops/aops)
 - Redis: localhost:6379
 
-> 内置一个演示告警规则 `DemoAppDown`（指向故意不可达的目标），约 1 分钟后会自动触发。
-
 ### 2. 配置 LLM 并启动 Agent
 
 ```bash
@@ -116,14 +114,14 @@ curl http://localhost:8080/api/feedback/stats     # 每告警规则误报率
 
 ## 核心机制说明
 
-### "告警来了查哪些日志"——三层机制
+### 三层机制
 
 1. **资产拓扑注入（确定性）**：告警里的 `service` 标签 → 查 `config/topology.json`
-   得到该服务的日志选择器、指标命名空间、runbook、依赖，直接注入提示词——LLM 从"大海捞针"变成"定点查"。
+   得到该服务的日志选择器、指标命名空间、runbook、依赖，直接注入提示词
 2. **提示词启发式**：Error-Rate 告警先查错误日志；CPU 告警先查指标定位容器；Down 告警先查部署窗口。
 3. **动态预算**：步数上限（`aops.agent.max-steps`）、工具输出截断、fast model 摘要（`summarize_output` 工具）。
 
-### 何时人工接管
+### 人工接管
 
 调查结束后自动裁决：`needsHuman=true` 或置信度 < 0.6 或 `INCONCLUSIVE` → Case 状态为
 `ESCALATED` 并附升级原因；需要写操作（重启/回滚）默认就属于必须人工的场景。
@@ -136,7 +134,7 @@ curl http://localhost:8080/api/feedback/stats     # 每告警规则误报率
    结构化裁决 `{verdict, confidence, ...}`。
 3. **人工确认 + 飞轮**：反馈标注 → `FALSE_POSITIVE` 状态沉淀 → 每规则误报率报表 → 阈值调优建议。
 
-### RAG 知识库（Phase 2 升级）
+### RAG 知识库
 
 `search_kb` 工具走**混合检索**：关键词 TF 打分 + pgvector 语义向量（余弦相似度）加权合并
 （`vector-weight` 默认 0.6）。启动时自动对 `config/kb/` 与 `config/runbooks/` 全部文档
@@ -155,7 +153,7 @@ set AOPS_KB_EMBEDDING_MODEL=BAAI/bge-m3
   `hybrid` / `keyword-fallback` / `keyword`）；
 - 文档更新后手动重建索引：`POST /api/kb/reindex`。
 
-### 多 Agent 调查模式（Phase 3，`AOPS_AGENT_MODE=supervisor`）
+### 多 Agent 调查模式
 
 单 Agent 模式（默认）之外，可切换到 **Supervisor + 专业 Agent** 并行调查：
 
